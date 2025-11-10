@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { LogOut, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface NavbarProps {
   user: User | null;
@@ -26,7 +27,8 @@ export const Navbar = ({ user }: NavbarProps) => {
           <span className="text-xl font-bold text-foreground">FactCheck</span>
         </Link>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           {user ? (
             <>
               <span className="text-sm text-muted-foreground hidden sm:inline">
