@@ -81,35 +81,134 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar user={session?.user ?? null} />
+    <div className="min-h-screen bg-background flex flex-col overflow-hidden">
+      <style>{`
+        @keyframes drift-slow {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.3;
+          }
+          90% {
+            opacity: 0.3;
+          }
+          100% {
+            transform: translateY(-100vh) translateX(10vw);
+            opacity: 0;
+          }
+        }
 
-      <main className="container mx-auto px-4 py-12 flex-1">
-        <div className="space-y-8">
-          <div className="text-center space-y-2 max-w-2xl mx-auto">
-            <h2 className="text-4xl font-bold tracking-tight">
-              Check News Claims Instantly
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Enter any news headline or claim to verify its accuracy using AI-powered fact-checking
-            </p>
-          </div>
+        @keyframes drift-medium {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.6;
+          }
+          90% {
+            opacity: 0.6;
+          }
+          100% {
+            transform: translateY(-100vh) translateX(-5vw);
+            opacity: 0;
+          }
+        }
 
-          <FactCheckInput onCheck={handleCheck} isLoading={isLoading} />
+        @keyframes drift-fast {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.8;
+          }
+          90% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateY(-100vh) translateX(2vw);
+            opacity: 0;
+          }
+        }
 
-          {result && (
-            <div className="max-w-3xl mx-auto">
-              <FactCheckResult
-                result={result.type}
-                claim={result.claim}
-                explanation={result.explanation}
-              />
+        .word {
+          position: absolute;
+          bottom: -150px;
+          font-weight: 800;
+          opacity: 0;
+          will-change: transform, opacity;
+          pointer-events: none;
+        }
+
+        .word-slow {
+          font-size: 1.5rem;
+          filter: blur(1.5px);
+          animation: drift-slow linear infinite;
+        }
+
+        .word-medium {
+          font-size: 2.5rem;
+          filter: blur(0.5px);
+          animation: drift-medium linear infinite;
+        }
+
+        .word-fast {
+          font-size: 3.5rem;
+          filter: none;
+          animation: drift-fast linear infinite;
+        }
+      `}</style>
+
+      <div className="fixed inset-0 overflow-hidden z-0" aria-hidden="true">
+        <span className="word word-fast text-green-400" style={{ left: '15%', animationDuration: '15s', animationDelay: '-2s' }}>Real News</span>
+        <span className="word word-fast text-red-500" style={{ left: '70%', animationDuration: '18s', animationDelay: '-5s' }}>Fake News</span>
+        <span className="word word-fast text-yellow-400" style={{ left: '40%', animationDuration: '16s', animationDelay: '-10s' }}>Breaking News</span>
+
+        <span className="word word-medium text-blue-400" style={{ left: '10%', animationDuration: '25s', animationDelay: '-5s' }}>Headlines</span>
+        <span className="word word-medium text-cyan-400" style={{ left: '80%', animationDuration: '22s', animationDelay: '-1s' }}>Exclusive</span>
+        <span className="word word-medium text-gray-300" style={{ left: '50%', animationDuration: '28s', animationDelay: '-15s' }}>Trust</span>
+        <span className="word word-medium text-purple-400" style={{ left: '25%', animationDuration: '24s', animationDelay: '-8s' }}>Analysis</span>
+
+        <span className="word word-slow text-green-700" style={{ left: '5%', animationDuration: '40s', animationDelay: '-12s' }}>Verified</span>
+        <span className="word word-slow text-red-800" style={{ left: '90%', animationDuration: '45s', animationDelay: '-3s' }}>Propaganda</span>
+        <span className="word word-slow text-orange-600" style={{ left: '60%', animationDuration: '38s', animationDelay: '-20s' }}>Authentication</span>
+        <span className="word word-slow text-yellow-700" style={{ left: '30%', animationDuration: '42s', animationDelay: '-7s' }}>Latest Update</span>
+        <span className="word word-slow text-gray-500" style={{ left: '75%', animationDuration: '35s', animationDelay: '-14s' }}>Sources</span>
+      </div>
+
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar user={session?.user ?? null} />
+
+        <main className="container mx-auto px-4 py-12 flex-1">
+          <div className="space-y-8">
+            <div className="text-center space-y-2 max-w-2xl mx-auto">
+              <h2 className="text-4xl font-bold tracking-tight">
+                Check News Claims Instantly
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Enter any news headline or claim to verify its accuracy using AI-powered fact-checking
+              </p>
             </div>
-          )}
-        </div>
-      </main>
 
-      <Footer />
+            <FactCheckInput onCheck={handleCheck} isLoading={isLoading} />
+
+            {result && (
+              <div className="max-w-3xl mx-auto">
+                <FactCheckResult
+                  result={result.type}
+                  claim={result.claim}
+                  explanation={result.explanation}
+                />
+              </div>
+            )}
+          </div>
+        </main>
+
+        <Footer />
+      </div>
     </div>
   );
 };
